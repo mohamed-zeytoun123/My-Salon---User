@@ -33,9 +33,10 @@ class AppLocalDataSourceImpl implements AppLocalDataSource {
   }
 
   @override
-  Future<AuthResponseModel?> deleteCachedUserDataApp() async {
-    return secureStorage.removeDataUserInCache();
-  }
+  Future<void> clearCachedUserDataApp() async {
+  await secureStorage.cleareDataUserInCache();
+}
+
   //?------------------ Language   -----------------------------------------------------------------------
 
   @override
@@ -70,7 +71,7 @@ class AppLocalDataSourceImpl implements AppLocalDataSource {
   }
 
   @override
-  Future<LatLng> getMyCurrLocatioApp() async {
+  Future<LatLng?> getMyCurrLocatioApp() async {
     return await locationService.getMyLocationService();
   }
   //?----------------------------------------------------------------------------------------------

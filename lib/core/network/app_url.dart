@@ -2,7 +2,8 @@ class AppUrls {
   static final String _baseUrl = "http://94.72.98.154/abdulrahim/public/api";
   static final String login = "$_baseUrl/auth/login";
   static final String signUp = "$_baseUrl/auth/register";
-  //? home
+  
+  //* home
   static String getTopSalon = "$_baseUrl/branches?top=1";
   static String getNearest = "$_baseUrl/branches?nearest=1";
   static String getNearestFetchSalon = "$_baseUrl/branches?nearest=1&type=2";

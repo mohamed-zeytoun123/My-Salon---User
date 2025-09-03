@@ -6,7 +6,7 @@ abstract class AppLocalDataSource {
   //?---------- User Data   ----------------------------------
   Future<AuthResponseModel?> getCachedUserDataApp();
   Future<void> cachedUserDataApp(AuthResponseModel model);
-  Future<AuthResponseModel?> deleteCachedUserDataApp();
+  Future<void> clearCachedUserDataApp();
 
   //?---------- Locale  -------------------------------------------------------
   Future<String?> getSavedLocaleAPP();
@@ -17,5 +17,5 @@ abstract class AppLocalDataSource {
   //?---------- Location   -------------------------------------------------------
   Future<void> removeCurrLocationAPP();
   Future<void> changeCurrLocatioApp(LatLng newLocation);
-  Future<LatLng> getMyCurrLocatioApp();
+  Future<LatLng?> getMyCurrLocatioApp();
 }

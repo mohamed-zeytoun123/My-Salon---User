@@ -24,7 +24,7 @@ class MapLocalDataSourceImpl implements MapLocalDataSource {
   }
 
   @override
-  Future<LatLng> getMyCurrLocatioApp() async {
+  Future<LatLng?> getMyCurrLocatioApp() async {
     return await locationService.getMyLocationService();
   }
 

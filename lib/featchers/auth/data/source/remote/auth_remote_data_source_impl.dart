@@ -1,11 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
-
-
+import 'package:my_salon/core/Error/failure.dart';
 import 'package:my_salon/core/network/api_general.dart';
 import 'package:my_salon/core/network/api_request.dart';
 import 'package:my_salon/core/network/app_url.dart';
-import 'package:my_salon/core/network/failure.dart';
+
 import 'package:my_salon/featchers/auth/data/model/auth_response_model.dart';
 import 'package:my_salon/featchers/auth/data/model/sign_up_params.dart';
 import 'package:my_salon/featchers/auth/data/source/remote/auth_remote_data_source.dart';
@@ -96,4 +95,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 //?-----------------------------------------------------------------------------------
+
 }
+

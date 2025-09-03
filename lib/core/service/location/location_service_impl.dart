@@ -12,7 +12,7 @@ class LocationServiceImpl implements LocationService {
 
   //? --------------------------------------------------------------------
 
-  //* get Address From LatLng
+  //* Get Address From LatLng
   @override
   Future<String> getAddressFromLatLngService(LatLng location) async {
     try {
@@ -23,19 +23,24 @@ class LocationServiceImpl implements LocationService {
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
-        return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
+        final street = place.street ?? '';
+        final locality = place.locality ?? '';
+        final adminArea = place.administrativeArea ?? '';
+        final country = place.country ?? '';
+        return "$street, $locality, $adminArea, $country";
       }
-    } catch (e) {
-      return "";
-    }
+    } catch (_) {}
     return "Unknown location";
   }
+
   //?------------------------------------------------------------
 
   //* Get List Freelancer Random
   @override
   Future<List<LatLng>> getListFreelancerService(int numberFreelancer) async {
     final myLoc = await storagePreferences.getSavedLocationInCach();
+    if (myLoc == null) return [];
+
     final random = Random();
     final points = List.generate(numberFreelancer, (i) {
       double latOffset = (random.nextDouble() * 0.072) - 0.036;
@@ -46,14 +51,31 @@ class LocationServiceImpl implements LocationService {
   }
 
   //?------------------------------------------------------------
+
   @override
-  Future<LatLng> getMyLocationService() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    LatLng myLoc = LatLng(position.latitude, position.longitude);
-    storagePreferences.saveLocationInCach(myLoc);
-    return myLoc;
+  Future<LatLng?> getMyLocationService() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return null;
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          return null;
+        }
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      LatLng myLoc = LatLng(position.latitude, position.longitude);
+      await storagePreferences.saveLocationInCach(myLoc);
+      return myLoc;
+    } catch (e) {
+      return null;
+    }
   }
 
   //?------------------------------------------------------------
@@ -62,11 +84,12 @@ class LocationServiceImpl implements LocationService {
   Future<void> removeCurrLocationService() async {
     await storagePreferences.removeCurrLocationInCach();
   }
+
   //?------------------------------------------------------------
 
   @override
   Future<void> changeCurrLocationService(LatLng newLocation) async {
-    Future.wait([
+    await Future.wait([
       removeCurrLocationService(),
       storagePreferences.saveLocationInCach(newLocation),
     ]);

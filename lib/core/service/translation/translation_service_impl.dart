@@ -8,29 +8,30 @@ class TranslationServiceImpl implements TranslationService {
   TranslationServiceImpl({required this.storagePreferanceService});
   //? -------------------------------------------------------------------
 
+  //* Change
   @override
   Future<void> changeLocaleService(Locale newLocale) async {
-    final Locale changedLocale;
-    if (newLocale == Locale('en')) {
-      changedLocale = Locale('ar');
-    } else {
-      changedLocale = Locale('en');
-    }
-    storagePreferanceService.changeLocaleInCach(changedLocale);
+    final changedLocale =
+        (newLocale.languageCode == 'en') ? Locale('ar') : Locale('en');
+    await storagePreferanceService.changeLocaleInCach(changedLocale);
   }
 
+  //* Save
   @override
   Future<void> saveLocaleService(String langCode) async {
     await storagePreferanceService.saveLocaleInCach(langCode);
   }
 
+  //* Clear
   @override
   Future<void> clearLocaleService() async {
     await storagePreferanceService.removeLocaleInCach();
   }
 
+  //* Get
   @override
   Future<String?> getSavedLocaleService() async {
     return await storagePreferanceService.getSavedLocaleInCach();
   }
+  //? -------------------------------------------------------------------
 }

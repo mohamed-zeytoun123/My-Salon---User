@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:my_salon/core/network/failure.dart';
+import 'package:my_salon/core/Error/failure.dart';
+
 import 'package:my_salon/featchers/auth/data/model/auth_response_model.dart';
 import 'package:my_salon/featchers/auth/data/model/sign_up_params.dart';
 

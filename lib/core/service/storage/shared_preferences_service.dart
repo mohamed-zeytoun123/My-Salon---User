@@ -12,88 +12,106 @@ class SharedPreferencesService {
   //?---------------- Remove All ------------------------------------------
   //! Log Out
   Future<void> removeAll() async {
-    await storagePreferences.clear();
+    try {
+      await storagePreferences.clear();
+    } catch (_) {}
   }
 
   //?----------------  Image ----------------------------------------------
 
   //* Save
   Future<void> saveProfileImageInCach(String key, String value) async {
-    await storagePreferences.setString(key, value);
+    try {
+      await storagePreferences.setString(key, value);
+    } catch (_) {}
   }
 
   //* Get
-  Future<File?> getProfileImageInCach() async {
-    final path = storagePreferences.getString(CacheKeys.imageProfile);
-
-    if (path != null && File(path).existsSync()) {
-      return File(path);
+  Future<String?> getProfileImageInCach() async {
+    try {
+      return storagePreferences.getString(CacheKeys.imageProfile);
+    } catch (_) {
+      return null;
     }
-    return null;
   }
 
   //* Remove
   Future<void> removeProfileImageInCach() async {
-    final path = storagePreferences.getString(CacheKeys.imageProfile);
-    if (path != null) {
-      final file = File(path);
-      if (file.existsSync()) {
-        await file.delete();
+    try {
+      final path = storagePreferences.getString(CacheKeys.imageProfile);
+      if (path != null) {
+        final file = File(path);
+        if (file.existsSync()) {
+          await file.delete();
+        }
       }
-    }
-    await storagePreferences.remove(CacheKeys.imageProfile);
+      await storagePreferences.remove(CacheKeys.imageProfile);
+    } catch (_) {}
   }
 
   //?-------------------- Locale  ------------------------------------------
 
   //* Get
   Future<String?> getSavedLocaleInCach() async {
-    return storagePreferences.getString(CacheKeys.appLanguage);
+    try {
+      return storagePreferences.getString(CacheKeys.appLanguage);
+    } catch (_) {
+      return null;
+    }
   }
 
   //* Save
   Future<void> saveLocaleInCach(String langCode) async {
-    await storagePreferences.setString(CacheKeys.appLanguage, langCode);
+    try {
+      await storagePreferences.setString(CacheKeys.appLanguage, langCode);
+    } catch (_) {}
   }
 
   //* Change
   Future<void> changeLocaleInCach(Locale newLocale) async {
-    await storagePreferences.setString(
-        CacheKeys.appLanguage, newLocale.languageCode);
+    try {
+      await storagePreferences.setString(
+          CacheKeys.appLanguage, newLocale.languageCode);
+    } catch (_) {}
   }
 
   //* Remove
   Future<void> removeLocaleInCach() async {
-    final path = storagePreferences.getString(CacheKeys.appLanguage);
-    if (path != null) {
+    try {
       await storagePreferences.remove(CacheKeys.appLanguage);
-    }
+    } catch (_) {}
   }
 
   //?---------------- Location  ---------------------------------------
 
   //* Save
   Future<void> saveLocationInCach(LatLng newLocation) async {
-    //todo if ( ) {} مالا نل
-    final decoded = jsonDecode(newLocation.toString());
-    final encoder = jsonEncode(decoded);
-    await storagePreferences.setString(CacheKeys.myLocation, encoder);
+    try {
+      final encoded = jsonEncode({
+        'latitude': newLocation.latitude,
+        'longitude': newLocation.longitude,
+      });
+      await storagePreferences.setString(CacheKeys.myLocation, encoded);
+    } catch (_) {}
   }
 
   //* Get
-  //todo راجعووووو
   Future<LatLng> getSavedLocationInCach() async {
-    final myloca = storagePreferences.get(CacheKeys.myLocation);
-    final LatLng encode = jsonEncode(myloca) as LatLng;
-    return encode;
+    try {
+      final mylocaString = storagePreferences.getString(CacheKeys.myLocation);
+      if (mylocaString != null) {
+        final Map<String, dynamic> decoded = jsonDecode(mylocaString);
+        return LatLng(decoded['latitude'], decoded['longitude']);
+      }
+    } catch (_) {}
+    return LatLng(0, 0);
   }
 
   //* Remove
   Future<void> removeCurrLocationInCach() async {
-    final path = storagePreferences.getString(CacheKeys.myLocation);
-    if (path != null) {
+    try {
       await storagePreferences.remove(CacheKeys.myLocation);
-    }
+    } catch (_) {}
   }
 
   //?--------------------------------------------------------------

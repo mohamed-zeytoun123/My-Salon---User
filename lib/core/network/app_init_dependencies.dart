@@ -28,8 +28,7 @@ import 'package:my_salon/featchers/auth/data/source/local/auth_local_data_source
 import 'package:my_salon/featchers/auth/data/source/local/auth_local_data_source_impl.dart';
 import 'package:my_salon/featchers/auth/data/source/remote/auth_remote_data_source.dart';
 import 'package:my_salon/featchers/auth/data/source/remote/auth_remote_data_source_impl.dart';
-import 'package:my_salon/featchers/auth/data/source/repo/auth_repostory.dart';
-
+import 'package:my_salon/featchers/auth/data/source/repo/auth_repostory.dart' ;
 import 'package:shared_preferences/shared_preferences.dart';
 
 final appLocator = GetIt.instance;
@@ -98,7 +97,7 @@ Future<void> appInitDependencies() async {
             locationService: appLocator<LocationService>(),
           ));
 
-  //* Auth local
+  //* Map local
   appLocator.registerLazySingleton<MapLocalDataSource>(() =>
       MapLocalDataSourceImpl(locationService: appLocator<LocationService>()));
 

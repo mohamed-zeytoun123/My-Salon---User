@@ -1,8 +1,10 @@
 import 'package:my_salon/core/Widgets/base/flushbar_helper.dart';
-import 'package:my_salon/core/app/manager/app_manager_cubit.dart';import 'package:easy_localization/easy_localization.dart';
+import 'package:my_salon/core/app/manager/app_manager_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_salon/featchers/Home/presentation/pages/home_content_page.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:my_salon/core/util/response_status_enum.dart';
 import 'package:my_salon/core/Widgets/Form%20Button%20Widget/text_button_color_main_widget.dart';
@@ -50,6 +52,12 @@ class SignUpActionsWidget extends StatelessWidget {
               );
               BlocProvider.of<AppManagerCubit>(context)
                   .saveUserDataInAppState(state.model!);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const HomeContentPage()),
+                (route) => false,
+              );
             } else if (state.signupError != null) {
               FlushbarHelper.showFlushbar(
                 context: context,

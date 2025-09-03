@@ -75,7 +75,7 @@ class AppManagerCubit extends Cubit<AppManagerState> {
   logout() async {
     Future.wait([
       local.clearLocaleAPP(),
-      local.deleteCachedUserDataApp(),
+      local.clearCachedUserDataApp(),
       local.removeCurrLocationAPP(),
     ]);
 

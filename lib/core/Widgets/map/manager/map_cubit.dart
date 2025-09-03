@@ -26,7 +26,7 @@ class MapCubit extends Cubit<MapState> {
   }
 
   getMyLocation() async {
-    final LatLng myloc = await local.getMyCurrLocatioApp();
+    final LatLng? myloc = await local.getMyCurrLocatioApp();
     emit(state.copyWith(currentLocation: myloc));
   }
 
@@ -35,14 +35,14 @@ class MapCubit extends Cubit<MapState> {
   Future<void> getCurrentLocation(BuildContext context) async {
     final network = appLocator<NetworkInfoService>();
     final locationService = appLocator<LocationService>();
-    //? تحقق من الاتصال
+    //* تحقق من الاتصال
     if (!await network.isConnected) {
       _showError(context, "No Connection", Icons.wifi_off);
       emit(state.copyWith(isShowNoConnection: true));
       return;
     }
 
-    //? تحقق من تشغيل الموقع
+    //* تحقق من تشغيل الموقع
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       _showError(
@@ -51,7 +51,7 @@ class MapCubit extends Cubit<MapState> {
       return;
     }
 
-    //? تحقق من الصلاحيات
+    //* تحقق من الصلاحيات
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -69,9 +69,9 @@ class MapCubit extends Cubit<MapState> {
       return;
     }
 
-    //? الحصول على الموقع
-    final LatLng myLoc = await locationService.getMyLocationService();
-    //? توليد نقاط عشوائية قريبة
+    //* الحصول على الموقع
+    final LatLng? myLoc = await locationService.getMyLocationService();
+    //* توليد نقاط عشوائية قريبة
     final List<LatLng> points =
         await locationService.getListFreelancerService(5);
 

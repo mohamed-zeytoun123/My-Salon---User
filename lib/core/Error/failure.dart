@@ -8,7 +8,9 @@ class Failure {
     this.statusCode,
     required this.message,
   });
+  //?----------------------------------------------------------------------------
 
+  //* handele Error
   factory Failure.handleError(Exception exception) {
     if (exception is! DioException) {
       return Failure(
@@ -47,17 +49,25 @@ class Failure {
 
       case DioExceptionType.badResponse:
         if (data is Map<String, dynamic>) {
-          //* حاول نقرأ الرسالة من أكثر من مفتاح
+          //!* حاول نقرأ الرسالة من أكثر من مفتاح
           int? statusCode = data['code'];
           String? errorMsg = data['message'] ?? data['msg'];
+
           if (statusCode != null && errorMsg != null) {
             return Failure(message: errorMsg, statusCode: statusCode);
-          } else {
+          } //* if message server is null :
+          else {
             switch (status) {
               case 400:
                 return Failure(
                   statusCode: status,
                   message: errorMsg ?? 'Invalid request',
+                );
+
+              case 401:
+                return Failure(
+                  statusCode: status,
+                  message: 'Unauthorized access, please login again',
                 );
 
               case 404:
@@ -78,11 +88,6 @@ class Failure {
                   message: 'Server Error',
                 );
 
-              case 401:
-                return Failure(
-                  statusCode: status,
-                  message: 'Unauthorized access, please login again',
-                );
               case 403:
                 return Failure(
                   statusCode: status,
@@ -125,47 +130,49 @@ class Failure {
     }
   }
 }
+//?-----------------------------------------------------------------------------------
+//?--------       Type Failure          ----------------------------------------------
+//?-----------------------------------------------------------------------------------
 
-//? --------- Type Failure -------------------------
-
+//* Refresh
 class FailureRefresh extends Failure {
   FailureRefresh({
     super.message = 'Refresh failed',
   });
 }
-//?------------------------------------------------
 
+//?-------------------------------------------------
+
+//* Wrong
 class FailureWrong extends Failure {
   FailureWrong({
     super.message = 'An error occurred!',
   });
 }
-//?------------------------------------------------
+//?-------------------------------------------------
 
+//* Server
 class FailureServer extends Failure {
   FailureServer({
     super.message = 'Server error!',
   });
 }
-//?------------------------------------------------
+//?-------------------------------------------------
 
+//* No Data ( Empty )
 class FailureNoData extends Failure {
   FailureNoData({
     super.message = 'No Data',
   });
 }
-//?------------------------------------------------
+//?-------------------------------------------------
 
+//* No Connection
 class FailureNoConnection extends Failure {
   FailureNoConnection({
     super.message = 'No Connection , Pleas Try Agen',
   });
 }
-//?------------------------------------------------
+//?-------------------------------------------------
 
-class FailureFetcHinghotels extends Failure {
-  FailureFetcHinghotels({
-    super.message = 'Error fetching hotels',
-  });
-//?------------------------------------------------
-}
+//?-------------------------------------------------

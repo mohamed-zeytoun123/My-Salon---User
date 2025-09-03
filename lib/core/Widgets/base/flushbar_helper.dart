@@ -85,6 +85,8 @@ class FlushbarHelper {
   }
 
   //?------------------------------------------------------------------------------
+  static bool _isSnackBarShowing = false;
+
   static void showSnackBar({
     required BuildContext context,
     required String message,
@@ -98,6 +100,10 @@ class FlushbarHelper {
     VoidCallback? mainButtonOnPressed,
     int? maxLines = 1,
   }) {
+    if (_isSnackBarShowing) return; // تمنع ظهور أكثر من واحد
+
+    _isSnackBarShowing = true;
+
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,11 +129,12 @@ class FlushbarHelper {
                 ),
               ),
             Expanded(
-                child: Text(
-              message.tr(),
-              maxLines: maxLines,
-              style: TextStyle(color: messageColor),
-            )),
+              child: Text(
+                message.tr(),
+                maxLines: maxLines,
+                style: TextStyle(color: messageColor),
+              ),
+            ),
           ],
         ),
       ],
@@ -135,9 +142,7 @@ class FlushbarHelper {
 
     final snackBar = SnackBar(
       content: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        },
+        onTap: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         child: Material(
           color: Colors.transparent,
           child: content,
@@ -163,6 +168,8 @@ class FlushbarHelper {
           : null,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+      _isSnackBarShowing = false; // لما SnackBar يختفي نرجع الحالة
+    });
   }
 }
